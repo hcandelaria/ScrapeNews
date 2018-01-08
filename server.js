@@ -6,12 +6,12 @@ const path = require('path')
 const mongoose = require('mongoose');
 const app = express();
 const request = require('request');
-const PORT = process.env.PORT || 3000;
 const router = express.Router();
 const models = require('./models');
 const db = require("./models");
 const cheerio = require('cheerio');
-
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/hackerNews";
+const PORT = process.env.PORT || 8080;
 //Static address 'public'
 app.use('/', express.static(path.join(__dirname, 'public')));
 //Sets up the Express app to handle data parsing
@@ -22,7 +22,7 @@ app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 
 mongoose.Promise = Promise;
-mongoose.connect('mongodb://localhost/hackerNews', {});
+mongoose.connect(MONGODB_URI, {});
 //ROUTES
 app.get('/articles', function (req, res) {
   //Get all news
