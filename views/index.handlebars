@@ -11,7 +11,11 @@
     </div>
     <div id="portfolio" class="section gray">
       <div class="gallery row">
-        {{>news}}
+        {{#each this}}
+          {{#if this.title}}
+            {{> news}}
+          {{/if}}
+        {{/each}}
       </div>
     </div>
   </div>

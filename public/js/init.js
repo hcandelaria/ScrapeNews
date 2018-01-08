@@ -1,7 +1,16 @@
 (function($){
 	$(function(){
 
-
+		$(document).on("click", ".saveArcticle", function() {
+			$.ajax({
+				method: "POST",
+				url: '/news',
+				data: {
+					title: $(this).siblings('a').children('h4'),
+					link: $(this).siblings('a').attr('href')
+				}
+			});
+		});
     // Navbar
     $(".button-collapse").sideNav();
     var categories = $('nav .categories-container');
@@ -102,6 +111,6 @@
       fillScreen: true,
       inDuration: 500,
     });
-		
+
 	}); // end of document ready
 })(jQuery); // end of jQuery name space
