@@ -12,26 +12,31 @@ const db = require("./models");
 const cheerio = require('cheerio');
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/hackerNews";
 const PORT = process.env.PORT || 8080;
+
 //Static address 'public'
 app.use('/', express.static(path.join(__dirname, 'public')));
+
 //Sets up the Express app to handle data parsing
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
+
 //Set handlebars
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 
 mongoose.Promise = Promise;
 mongoose.connect(MONGODB_URI, {});
+
 //ROUTES
 app.get('/articles', function (req, res) {
   //Get all news
-  db.News.find({}).limit(10).then(function(dbNews) {
+  db.News.find({}).then(function(dbNews) {
     res.render('index', dbNews);
   }).catch(function(err){
     res.json(err);
   });
 });
+
 //Scrape route
 app.get('/', function(req, res) {
   request("https://news.ycombinator.com/", function(error, response, html) {
@@ -51,6 +56,13 @@ app.get('/', function(req, res) {
     console.log(newsArray);
     res.render('index', newsArray);
   });
+});
+app.post('/news', function (req,res){
+  db.News.create(req.body).then( function(dbNews){
+    console.log('New article was saved');
+  }).catch(function (err){
+    res.json(err);
+  })
 });
 //Listen for requests
 app.listen(PORT, function() {
