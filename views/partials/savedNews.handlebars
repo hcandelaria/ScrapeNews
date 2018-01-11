@@ -2,9 +2,37 @@
   <div class="gallery-curve-wrapper">
 
     <div class="gallery-header">
-      <i class="red material-icons">edit</i>
-      <i class="red material-icons">delete</i>
-      <a href={{this.link}} target="_blank"><h4>{{this.title}}</h4></a>
+      <div id={{this._id}}>
+        <a href={{this.link}} target="_blank"><h4>{{this.title}}</h4></a>
+        <a class="modal-trigger" href="#{{this._id}}">
+          <i class="black-text medium material-icons">edit</i>
+        </a>
+        <a href="#!"><i class="removeNews red-text medium material-icons">delete</i></a>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal Structure -->
+<div class="container">
+  <div class="row">
+    <div id={{this._id}} class="modal">
+      <div class="modal-content">
+        <form class="col s10 offset-s1">
+          <div class="title input-field">
+            <input placeholder="title" id="title" type="text" class="validate">
+            <label for="title">title</label>
+          </div>
+          <div class="notes input-field">
+            <textarea id="notes" class="materialize-textarea"></textarea>
+            <label for="textarea1 center">Notes</label>
+          </div>
+        </form>
+      </div>
+      <div class="col s10 offset-s1">
+        <div class="modal-footer">
+          <a href="#!" class="modal-action modal-close left btn blue submit-notes">Submit</a>
+        </div>
+      </div>
     </div>
   </div>
 </div>

@@ -7,7 +7,8 @@ var newsSchema = new Schema({
   title: {
     type: String,
     trim: true,
-    required: 'title is required.'
+    required: 'title is required.',
+    unique: true
   },
   link: {
     type: String,

@@ -31,7 +31,7 @@ mongoose.connect(MONGODB_URI, {});
 app.get('/articles', function (req, res) {
   //Get all news
   db.News.find({}).then(function(dbNews) {
-    res.render('index', dbNews);
+    res.render('articles', dbNews);
   }).catch(function(err){
     res.json(err);
   });
@@ -58,11 +58,32 @@ app.get('/', function(req, res) {
   });
 });
 app.post('/news', function (req,res){
-  db.News.create(req.body).then( function(dbNews){
-    console.log('New article was saved');
+  db.News.create(req.body)
+  .then( function(dbNews){
+    res.json(dbNews);
   }).catch(function (err){
     res.json(err);
   })
+});
+app.post('/notes/:id', function (req,res) {
+  db.Notes
+    .create(req.body)
+    .then( function(dbNotes){
+      return db.News.findByIdAndUpdate(req.params.id,{ $push: {notesId: dbNotes._id }}, {new:true});
+    }).then(function(dbNotes) {
+      res.json(dbNotes);
+    }).catch(function(err){
+      res.json(err);
+    });
+});
+app.delete('/news/:id', function (req,res) {
+  db.News.findByIdAndRemove(req.params.id, function(err) {
+    if (err) res.send(err);
+    else res.json({ message: 'News Deleted!'});
+  });
+});
+app.delete('/notes', function (req, res){
+
 });
 //Listen for requests
 app.listen(PORT, function() {
