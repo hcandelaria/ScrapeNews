@@ -31,7 +31,7 @@ $( document ).ready(function() {
   }).then( function (dbNotes,res){
 
       if (res !== 'success') Materialize.toast('Unknown error try again', 5000, 'rounded red');
-      else Materialize.toast('Deleted', 3000, 'rounded green');
+      else Materialize.toast('Deleted', 3000, 'rounded red');
     });
   })
 });
