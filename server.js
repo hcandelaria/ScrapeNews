@@ -30,7 +30,9 @@ mongoose.connect(MONGODB_URI, {});
 //ROUTES
 app.get('/articles', function (req, res) {
   //Get all news
-  db.News.find({}).then(function(dbNews) {
+  db.News.find({})
+  .populate('Notes')
+  .then(function(dbNews) {
     res.render('articles', dbNews);
   }).catch(function(err){
     res.json(err);
@@ -42,8 +44,6 @@ app.get('/', function(req, res) {
   request("https://news.ycombinator.com/", function(error, response, html) {
     let $ = cheerio.load(html);
     var newsArray = [];
-
-
     $('tr.athing').each( (i,element) => {
       //news Object
       let news = {};
@@ -53,7 +53,6 @@ app.get('/', function(req, res) {
     });
 
     newsArray = newsArray.slice(0,10);
-    console.log(newsArray);
     res.render('index', newsArray);
   });
 });
@@ -69,7 +68,7 @@ app.post('/notes/:id', function (req,res) {
   db.Notes
     .create(req.body)
     .then( function(dbNotes){
-      return db.News.findByIdAndUpdate(req.params.id,{ $push: {notesId: dbNotes._id }}, {new:true});
+      return db.News.findByIdAndUpdate(req.params.id,{ $push: {notesId: dbNotes}}, {new:true});
     }).then(function(dbNotes) {
       res.json(dbNotes);
     }).catch(function(err){
@@ -77,13 +76,18 @@ app.post('/notes/:id', function (req,res) {
     });
 });
 app.delete('/news/:id', function (req,res) {
-  db.News.findByIdAndRemove(req.params.id, function(err) {
-    if (err) res.send(err);
-    else res.json({ message: 'News Deleted!'});
+  db.News.findByIdAndRemove(req.params.id,
+    function(err) {
+      if (err) res.send(err);
+      else res.json({ message: 'News Deleted!'});
   });
 });
-app.delete('/notes', function (req, res){
-
+app.delete('/notes/:id', function (req, res){
+  db.News.findByIdAndRemove(req.params.id,{ new: true },
+    function(err) {
+      if (err) res.send(err);
+      else res.json({ message: 'News Deleted!'});
+  });
 });
 //Listen for requests
 app.listen(PORT, function() {

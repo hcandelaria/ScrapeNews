@@ -16,8 +16,8 @@ var newsSchema = new Schema({
     required: 'link is required.'
   },
   notesId: [{
-    type: Schema.Types.ObjectId,
-    ref: "Notes"
+    title: String,
+    comment: String
   }]
 })
 //Create news model

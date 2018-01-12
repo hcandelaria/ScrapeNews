@@ -25,13 +25,17 @@ $( document ).ready(function() {
     });
   });
   $(document).on('click','.removeNews', function(){
+    $(this).parent().parent().fadeOut();
     $.ajax({
     type: 'DELETE',
     url: "/news/" + $(this).parent().parent().attr('id')
   }).then( function (dbNotes,res){
-
-      if (res !== 'success') Materialize.toast('Unknown error try again', 5000, 'rounded red');
-      else Materialize.toast('Deleted', 3000, 'rounded red');
+      if (res !== 'success') {
+        Materialize.toast('Unknown error try again', 5000, 'rounded red');
+      }
+      else {
+        Materialize.toast('Deleted', 3000, 'rounded red');
+      }
     });
   })
 });

@@ -15,10 +15,12 @@
 <!-- Modal Structure -->
 <div class="container">
   <div class="row">
-    {{notes}}
     <div id={{this._id}} class="modal">
       <div class="modal-content">
         <form class="col s10 offset-s1">
+          {{#each notesId}}
+            <p>{{>notes}}</p>
+          {{/each}}
           <div class="title input-field">
             <input placeholder="title" id="title" type="text" class="validate">
             <label for="title">title</label>
