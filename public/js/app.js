@@ -38,4 +38,13 @@ $( document ).ready(function() {
       }
     });
   })
+  $(document).on('click','.removeNotes', function(){
+    $(this).parent().parent().fadeOut();
+    $.ajax({
+    type: 'DELETE',
+    url: "/notes/" + $(this).parent().parent().attr('id')
+  }).then( function (dbNotes,res){
+    console.log('Deleted notes!');
+    });
+  })
 });

@@ -70,6 +70,7 @@ app.post('/notes/:id', function (req,res) {
     .then( function(dbNotes){
       return db.News.findByIdAndUpdate(req.params.id,{ $push: {notesId: dbNotes}}, {new:true});
     }).then(function(dbNotes) {
+      console.log(dbNotes);
       res.json(dbNotes);
     }).catch(function(err){
       res.json(err);
@@ -83,11 +84,29 @@ app.delete('/news/:id', function (req,res) {
   });
 });
 app.delete('/notes/:id', function (req, res){
-  db.News.findByIdAndRemove(req.params.id,{ new: true },
-    function(err) {
-      if (err) res.send(err);
-      else res.json({ message: 'News Deleted!'});
+  //Find the note Object in the notesId array
+  db.News.findOneAndUpdate({"notesId._id": req.params.id},
+    {$pull: {notesId:{_id: mongoose.Types.ObjectId(req.params.id)}}}, {new:true},
+    (err,dbNews) => {
+      if (err) {
+        console.log(err);
+      }else{
+        db.Notes.findByIdAndRemove(req.params.id,
+          function(err) {
+            if (err) res.send(err);
+            else res.json({ message: 'News Deleted!'});
+        });
+      }
   });
+  // db.Notes.findByIdAndRemove(req.params.id)
+  //   .then(function(dbNotes){
+  //     return db.News.findByIdAndUpdate(req.params.id, { $pull: {notesId: id}}, {new:true});
+  //   }).then(function(dbNotes){
+  //     console.log(dbNotes);
+  //     res.json(dbNotes);
+  //   }).catch(function(err){
+  //     res.json(err);
+  //   });
 });
 //Listen for requests
 app.listen(PORT, function() {
